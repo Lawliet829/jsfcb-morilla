@@ -1,6 +1,7 @@
 // JavaScript is primarily used for implementing the logic and functionaility of web applications
 
 // Variables
+
 let board;
 let score = 0;
 let rows = 4;
@@ -383,49 +384,48 @@ function restartGame(){
 	setTwo();
 }
 
-// this will document the x and y coordinates where the touch start
+// This will document the x and y coordinates where the touch start
 document.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
+	startX = e.touches[0].clientX;
+	startY = e.touches[0].clientY;
 })
 
+
 document.addEventListener('touchend', (e) => {
-    if(!e.target.className.includes("tile")){
-        return;
-    }
 
-    // formula of diffx and diffy = touchstart - touchend
-    let diffX = startX - e.changedTouches[0].clientX;
-    let diffY = startY - e.changedTouches[0].clientY;
+	if(!e.target.className.includes("tile")){
+		return;
+	}
+	// Formula of diffX and diffY =  touchstart - touchend
+	let diffX = startX - e.changedTouches[0].clientX;
+	let diffY = startY - e.changedTouches[0].clientY;
 
-    if(Math.abs(diffX) > Math.abs(diffY)){
+	if(Math.abs(diffX) > Math.abs(diffY)){
+		if(diffX > 0){ // If diffX is a positive number
+			slideLeft();
+			setTwo();
+		}
+		else{ // If diffX is a zero or negative number
+			slideRight();
+			setTwo();
+		}
+	}
+	else{
+		if(diffY > 0){ // If diffY is a positive number
+			slideUp();
+			setTwo();
+		}
+		else{  // If diffY is a zero or negative number
+			slideDown();
+			setTwo();
+		}
+	}
 
-        if(diffX > 0){
-            slideLeft();
-            setTwo();
-        }
-        else{
-            slideRight();
-            setTwo();
-        }
-    }
-    else{
-        if(diffY > 0){
-            slideUp();
-            setTwo();
-        }
-        else{
-            slideDown();
-            setTwo();
-        }
+	document.getElementById("score").innerText = score;
 
-    }
+	checkWin();
 
-    document,getElementById("score").innerText = score;
-
-    checkWin();
-
-    if(hasLost() == true){
+	if(hasLost() == true){
 		setTimeout(() => {
 			alert("Game Over! You have lost the game. Game will restart" );
 			restartGame();
@@ -435,69 +435,79 @@ document.addEventListener('touchend', (e) => {
 
 })
 
-
-
 document.addEventListener('touchmove', (e) => {
+	if(!e.target.className.includes("tile")){
+		return;
+	}
+	e.preventDefault(); // This line prevents scrolling
+}, {passive: false}); // Use passive: false to make preventDefault() work
 
-    if(!e.target.className.includes("tile")){
-        return;
-    }
-
-    e.preventDefault();
-
-}, { passive: false });
 
 function canMoveLeft(){
-    for(let r=0; r<rows; r++){
-        for(let c=columns;c<columns; c++){
-            if(board[r][c] !== 0){
-                if(board[r][c-1] === 0 || board[r][c-1] === board[r][c]){
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
+
+	for(let r=0; r<rows; r++){
+		for(let c=1; c<columns; c++){
+
+			if(board[r][c] !== 0){
+				if(board[r][c-1] === 0 || board[r][c-1] === board[r][c]){
+					return true;
+				}
+			}
+
+		}
+	}
+	return false;
 }
 
+
 function canMoveRight(){
-    for(let r=0; r<rows; r++){
-        for(let c=columns - 2;c>=0; c--){
-            if(board[r][c] !== 0){
-                if(board[r][c+1] === 0 || board[r][c+1] === board[r][c]){
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
+	for(let r=0; r<rows; r++){
+		for(let c=columns - 2; c>=0; c--){
+
+			if(board[r][c] !== 0){
+				if(board[r][c+1] === 0 || board[r][c+1] === board[r][c]){
+					return true;
+				}
+			}
+
+		}
+	}
+
+	return false;
+
 }
 
 function canMoveUp(){
-    for(let c=0; c<rows; c++){
-        for(let r=1;r<columns; r++){
-            if(board[r][c] !== 0){
-                if(board[r-1][c] === 0 || board[r-1][c] === board[r][c]){
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
+	for(let c = 0; c<columns; c++){
+		for(let r=1; r<rows; r++){
+
+			if(board[r][c] !== 0){
+				if(board[r-1][c] === 0 || board[r-1][c] === board[r][c]){
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 function canMoveDown(){
-    for(let c=0; c<rows; c++){
-        for(let r=rows - 2;r>=0; r--){
-            if(board[r][c] !== 0){
-                if(board[r+1][c] === 0 || board[r+1][c] === board[r][c]){
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
+	for(let c = 0; c<columns; c++){
+		for(let r=rows-2; r>=0; r--){
+			if(board[r][c] !== 0){
+				if(board[r+1][c] === 0 || board[r+1][c] === board[r][c]){
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
+
+
+
+
+
 
 
 
